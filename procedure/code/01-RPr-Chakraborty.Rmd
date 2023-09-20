@@ -1,6 +1,6 @@
 ---
 title: "Reproduction of Chakraborty 2021: An intracategorical analysis of COVID-19 and people with disabilities"
-author: "Joseph Holler, Junyi Zhou, Peter Kedron, Drew An-Pham, Derrick Burt"
+author: "Joseph Holler, Junyi Zhou, Peter Kedron, Drew An-Pham, Derrick Burt, New Author"
 date: "`r Sys.Date()`"
 output: pdf_document
 editor_options:
@@ -10,7 +10,7 @@ knit: (function(inputFile, encoding) {
   rmarkdown::render(inputFile, encoding = encoding, output_dir = "../../docs/report") })
 ---
 
-Version 2.0 \| First Created July 7, 2021 \| Updated June 26, 2023
+Version 2.1 \| First Created July 7, 2021 \| Updated September 21, 2023
 
 # Abstract
 
@@ -178,16 +178,7 @@ Details on ACS data collection can be found at <https://www.census.gov/topics/he
 American Community Survey (ACS) data for sociodemographic subcategories of people with disabilities can be accessed by using the `tidycensus` package to query the Census API. This requires an API key which can be acquired at [api.census.gov/data/key_signup.html](https://api.census.gov/data/key_signup.html).
 
 ```{r API-Load-ACS, eval=FALSE}
-# get API Key
-# we could store this in the raw/private or scratch folder and load if the
-# researcher has already entered it once
-census_api_key(
-  # dlgInput(
-  #   "Enter a Census API Key",
-    Sys.getenv("CENSUS_API_KEY")
-  # )$res,
-  overwrite = TRUE
-)
+# If you wish to use a census API key, run the census_api_key() function in the console
 
 # Query disability demographic data with geographic boundaries
 acs <- get_acs(
@@ -249,7 +240,7 @@ state <- filter(state, !STATEFP %in% c("02", "15", "72")) %>%
   st_transform(5070)
 
 # Join poverty data to disability data
-acs <- left_join(acs, acs_pov, by = "GEOID")
+acs <- acs %>% left_join(acs_pov, by = "GEOID")
 rm(acs_pov)
 ```
 
@@ -360,7 +351,7 @@ rm(acs, acs_derived, covid)
 ## Missing data
 
 **Unplanned deviation for reproduction**: There is one county with missing disability and poverty data.
-This was not mentioned in the original study or in our pre-analyis plan.
+This was not mentioned in the original study or in our pre-analysis plan.
 However, we replace the missing data with zeros, producing results identical to Chakraborty's.
 
 ```{r missing data}
@@ -1884,8 +1875,6 @@ tm_gee_weights
 
 # re
 ```
-
-
 
 ```{r save-figures, eval = F}
 # save figures as image files
